@@ -3,5 +3,9 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"prettier.semi": false
+	}
 }

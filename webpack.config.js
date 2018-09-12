@@ -1,20 +1,38 @@
-var path = require('path');
- 
+const path = require('path')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const ManifestPlugin = require('webpack-manifest-plugin')
+
 module.exports = {
-    mode: 'production',
-    entry: './src/SankeyChart.jsx',
-    output: {
-        path: path.resolve('lib'),
-        filename: 'index.js',
-        libraryTarget: 'commonjs2'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.jsx?$/,
-                exclude: /(node_modules)/,
-                use: 'babel-loader'
-            }
-        ]
-    }
+  entry: './src/SankeyChart/SankeyChart.js',
+  output: {
+    path: path.resolve('lib'),
+    filename: 'index.js',
+    libraryTarget: 'commonjs2'
+  },
+  plugins: [new ExtractTextPlugin('[name].css'), new ManifestPlugin()],
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules)/,
+        use: 'babel-loader'
+      },
+      {
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          use: [
+            'css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
+            'less-loader'
+          ]
+        })
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          use:
+            'css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+        })
+      }
+    ]
+  }
 }
