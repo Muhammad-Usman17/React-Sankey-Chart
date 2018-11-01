@@ -4,15 +4,9 @@ import React from 'react'
 import map from 'lodash/map'
 import round from 'lodash/round'
 import size from 'lodash/size'
-import { Choose, When, Otherwise } from 'jsx-control-statements'
 
 // src
 import styles from './NodeLabel.less'
-
-type Props = {
-  nodes: Array<Object>,
-  width: number
-}
 
 function labelSplitter(text, limit) {
   const count = size(text)
@@ -30,47 +24,45 @@ function labelSplitter(text, limit) {
   return [text]
 }
 
-const NodesLabel = ({ nodes, width }: Props) => (
+const NodeLabel = ({ nodes, width }: Props) => (
   <g className={styles.root}>
     {map(nodes, node => {
       const { x, dx, y, dy, label } = node
       const lines = labelSplitter(label, width < 950 ? 20 : 25)
-
-      return (
-        <Choose>
-          <When condition={lines.length < 2}>
-            <text
+      if (lines.length < 2) {
+        return (
+          <text
+            x={round(width) - round(x + dx) > 10 ? x + dx + 6 : x - 6}
+            y={(y + y + dy) / 2}
+            textAnchor={round(width) - round(x + dx) > 10 ? 'start' : 'end'}
+            dy={(y + y + dy) / 2 < 10 ? '0.60em' : '0.35em'}
+            className={styles.label}
+          >
+            {lines[0]}
+          </text>
+        )
+      } else {
+        return (
+          <text>
+            <tspan
               x={round(width) - round(x + dx) > 10 ? x + dx + 6 : x - 6}
-              y={(y + y + dy) / 2}
               textAnchor={round(width) - round(x + dx) > 10 ? 'start' : 'end'}
-              dy={(y + y + dy) / 2 < 10 ? '0.60em' : '0.35em'}
+              y={(y + y + dy) / 2}
               className={styles.label}
             >
-              {lines[0]}
-            </text>
-          </When>
-          <Otherwise>
-            <text>
-              <tspan
-                x={round(width) - round(x + dx) > 10 ? x + dx + 6 : x - 6}
-                textAnchor={round(width) - round(x + dx) > 10 ? 'start' : 'end'}
-                y={(y + y + dy) / 2}
-                className={styles.label}
-              >
-                {`${lines[0]}`}
-              </tspan>
-              <tspan
-                x={round(width) - round(x + dx) > 10 ? x + dx + 6 : x - 10}
-                textAnchor={round(width) - round(x + dx) > 10 ? 'start' : 'end'}
-                y={(y + y + dy) / 2 + 10}
-                className={styles.label}
-              >
-                {`${lines[1]}`}
-              </tspan>
-            </text>
-          </Otherwise>
-        </Choose>
-      )
+              {`${lines[0]}`}
+            </tspan>
+            <tspan
+              x={round(width) - round(x + dx) > 10 ? x + dx + 6 : x - 10}
+              textAnchor={round(width) - round(x + dx) > 10 ? 'start' : 'end'}
+              y={(y + y + dy) / 2 + 10}
+              className={styles.label}
+            >
+              {`${lines[1]}`}
+            </tspan>
+          </text>
+        )
+      }
     })}
   </g>
 )

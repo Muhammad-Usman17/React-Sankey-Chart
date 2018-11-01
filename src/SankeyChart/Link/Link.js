@@ -7,12 +7,6 @@ import { sankey as d3Sankey } from '../../Helper/d3Sankey'
 // src
 import styles from './Link.less'
 
-type Props = {
-  links: Array<Object>,
-  activeNodeId: String,
-  onClick: Function
-}
-
 const Links = ({ links, activeNodeId, onClick }: Props) => (
   <g className={styles.root}>
     {map(links, link => {
